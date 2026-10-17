@@ -1,8 +1,8 @@
 class Aix < Formula
   desc "Turn plain English into shell commands with Apple Intelligence"
   homepage "https://github.com/jaiamin/aix"
-  url "https://github.com/jaiamin/aix/releases/download/v0.3.2/aix-0.3.2-arm64-macos.tar.gz"
-  sha256 "8bd0503e16337041b0f86b0f609e74ba4ab2c67876700cdc9553b781db671770"
+  url "https://github.com/jaiamin/aix/releases/download/v0.3.3/aix-0.3.3-arm64-macos.tar.gz"
+  sha256 "bc1576821073d17f5686c520758e1f4b8ae3b02c702cd482757c6a9347036ea3"
   license "MIT"
 
   depends_on arch: :arm64
