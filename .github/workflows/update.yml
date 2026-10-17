@@ -1,0 +1,29 @@
+name: update
+
+# Points the formula at the latest jaiamin/aix release. Uses only this repo's own token.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Update the formula if aix has a newer release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh release view --repo jaiamin/aix --json tagName --jq .tagName)
+          url="https://github.com/jaiamin/aix/releases/download/$tag/aix-${tag#v}-arm64-macos.tar.gz"
+          if grep -qF "$url" Formula/aix.rb; then echo "Already on $tag"; exit 0; fi
+          sha=$(curl -fsSL "$url" | sha256sum | cut -d' ' -f1)
+          sed -i -E "s|^  url \".*\"|  url \"$url\"|; s|^  sha256 \".*\"|  sha256 \"$sha\"|" Formula/aix.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "feat: aix ${tag#v}"
+          git push
